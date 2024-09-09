@@ -14,42 +14,58 @@ public class AlunosController : ControllerBase
 	}
 
 	[HttpGet]
-	public IActionResult Listar()
+	public async Task<IActionResult> GetAlunos()
 	{
-		var alunos = AlunoService.Listar();
-		return Ok(alunos);
+		var alunos = await AlunoService.ListarAsync();
+		return Ok(alunos); // Isso garante que o resultado é retornado, não a Task
 	}
 
 	[HttpGet("{id}")]
 	public IActionResult Detalhes(int id)
 	{
-		var aluno = AlunoService.Obter(id);
+		var aluno = AlunoService.ObterAsync(id);
 		return aluno != null ? Ok(aluno) : NotFound();
 	}
 
 	[HttpPost]
-	public IActionResult Criar([FromBody] Aluno aluno)
+	public IActionResult Criar([FromBody] Students aluno)
 	{
-		AlunoService.Cadastrar(aluno);
+		AlunoService.CadastrarAsync(aluno);
 		return CreatedAtAction(nameof(Detalhes), new { id = aluno.Id }, aluno);
 	}
 
 	[HttpPut("{id}")]
-	public IActionResult Editar(int id, [FromBody] Aluno aluno)
+	public IActionResult Editar(int id, [FromBody] Students aluno)
 	{
 		if (id != aluno.Id)
 		{
 			return BadRequest();
 		}
 
-		AlunoService.Editar(aluno);
+		AlunoService.EditarAsync(aluno);
 		return NoContent();
 	}
 
 	[HttpDelete("{id}")]
 	public IActionResult Deletar(int id)
 	{
-		AlunoService.Deletar(id);
+		AlunoService.DeletarAsync(id);
 		return NoContent();
 	}
+
+	[HttpGet("TestDatabaseConnection")]
+	public async Task<IActionResult> TestDatabaseConnection()
+	{
+		try
+		{
+			var alunos = await AlunoService.ListarAsync();
+			return Ok(alunos); // Se isso funcionar, a conexão está boa
+		}
+		catch (Exception ex)
+		{
+			return BadRequest($"Erro ao acessar o banco de dados: {ex.Message}");
+		}
+	}
+
+
 }

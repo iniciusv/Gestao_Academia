@@ -6,5 +6,5 @@ public class Pagamento
 	public int Ano { get; set; }
 	public int Mes { get; set; }
 	public int Status { get; set; }
-	public Aluno Aluno { get; set; }
+	public Students Aluno { get; set; }
 }

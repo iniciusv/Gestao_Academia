@@ -1,47 +1,42 @@
 ﻿using Gestao_Academia.Models;
+using Gestao_Academia.RepositoryAbstractions;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Gestao_Academia.Service;
 
 public class AlunoService
 {
-	private List<Aluno> Alunos = new List<Aluno>();
+	private readonly IAlunoRepository Repository;
 
-	public AlunoService()
+	public AlunoService(IAlunoRepository repository)
 	{
-		Alunos.Add(new Aluno { Id = 1, Nome = "João Silva", Email = "joao@example.com", CPF = "12345678901", Telefone = "11999999999", StatusPagamento = 1 });
-		Alunos.Add(new Aluno { Id = 2, Nome = "Maria Souza", Email = "maria@example.com", CPF = "98765432109", Telefone = "11988888888", StatusPagamento = 0 });
+		Repository = repository;
 	}
 
-	public List<Aluno> Listar()
+	public async Task<List<Students>> ListarAsync()
 	{
-		return Alunos;
+		var alunos = await Repository.GetAllAsync();
+		return alunos.ToList();
 	}
 
-	public Aluno Obter(int id)
+	public async Task<Students> ObterAsync(int id)
 	{
-		return Alunos.FirstOrDefault(a => a.Id == id);
+		return await Repository.GetByIdAsync(id);
 	}
 
-	public void Cadastrar(Aluno aluno)
+	public async Task CadastrarAsync(Students aluno)
 	{
-		Alunos.Add(aluno);
+		await Repository.AddAsync(aluno);
 	}
 
-	public void Editar(Aluno aluno)
+	public async Task EditarAsync(Students aluno)
 	{
-		var index = Alunos.FindIndex(a => a.Id == aluno.Id);
-		if (index != -1)
-		{
-			Alunos[index] = aluno;
-		}
+		await Repository.UpdateAsync(aluno);
 	}
 
-	public void Deletar(int id)
+	public async Task DeletarAsync(int id)
 	{
-		var aluno = Alunos.FirstOrDefault(a => a.Id == id);
-		if (aluno != null)
-		{
-			Alunos.Remove(aluno);
-		}
+		await Repository.DeleteAsync(id);
 	}
 }

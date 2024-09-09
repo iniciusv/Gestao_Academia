@@ -1,4 +1,7 @@
+using Gestao_Academia.Repository;
+using Gestao_Academia.RepositoryAbstractions;
 using Gestao_Academia.Service;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +15,15 @@ builder.Services.AddSwaggerGen(c =>
 	c.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API", Version = "v1" });
 });
 
+
+builder.Services.AddDbContext<AcademiaContext>(options =>
+	options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 21)))
+);
+
+
 builder.Services.AddScoped<AlunoService>();
+builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
+
 var app = builder.Build();
 
 
