@@ -8,7 +8,6 @@ public class AcademiaContext : DbContext
 
 	public AcademiaContext(DbContextOptions<AcademiaContext> options) : base(options)
 	{
-		// Tenta abrir a conexão com o banco de dados para testar a configuração
 		try
 		{
 			this.Database.OpenConnection();
@@ -16,13 +15,12 @@ public class AcademiaContext : DbContext
 		}
 		catch (Exception ex)
 		{
-			// Loga a exceção ou trata o erro de conexão
 			Console.WriteLine("Erro ao conectar ao banco de dados: " + ex.Message);
 		}
 	}
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// Configurações do modelo e relações vão aqui
+		// TODO:
 	}
 }
