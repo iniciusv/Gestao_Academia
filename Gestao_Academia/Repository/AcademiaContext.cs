@@ -5,6 +5,7 @@ public class AcademiaContext : DbContext
 {
 	public DbSet<Students> Students { get; set; }
 	public DbSet<Pagamento> Pagamentos { get; set; }
+	public DbSet<Users> Users { get; set; }
 
 	public AcademiaContext(DbContextOptions<AcademiaContext> options) : base(options)
 	{
@@ -21,6 +22,6 @@ public class AcademiaContext : DbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
-		// TODO:
+		// Model customization goes here if necessary
 	}
 }
