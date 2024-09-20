@@ -5,38 +5,31 @@ using System.Threading.Tasks;
 
 namespace Gestao_Academia.Service;
 
-public class PlanService
-{
+public class PlanService{
 	private readonly IPlanRepository Repository;
 
-	public PlanService(IPlanRepository repository)
-	{
+	public PlanService(IPlanRepository repository){
 		Repository = repository;
 	}
 
-	public async Task<List<Plan>> GetAllAsync()
-	{
+	public async Task<List<Plan>> GetAllPlansAsync(){
 		var Plans = await Repository.GetAllAsync();
 		return Plans.ToList();
 	}
 
-	public async Task<Plan> GetByIdAsync(int id)
-	{
+	public async Task<Plan> GetPlanByIdAsync(int id){
 		return await Repository.GetByIdAsync(id);
 	}
 
-	public async Task AddAsync(Plan Plan)
-	{
+	public async Task AddPlanAsync(Plan Plan){
 		await Repository.AddAsync(Plan);
 	}
 
-	public async Task UpdateAsync(Plan Plan)
-	{
+	public async Task UpdatePlanAsync(Plan Plan){
 		await Repository.UpdateAsync(Plan);
 	}
 
-	public async Task DeleteAsync(int id)
-	{
+	public async Task DeletePlanByIdAsync(int id){
 		await Repository.DeleteAsync(id);
 	}
 }
