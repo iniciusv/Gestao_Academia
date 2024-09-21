@@ -1,0 +1,34 @@
+﻿@using System.Linq.Expressions
+@inherits InputBase<string>
+
+<div class="input-container col-@Size mt-3" title="@Tip">
+	<label for="cmb-@Id" class="form-label">@Label</label>
+	<select class="form-select form-select" aria-label=".form-select-sm example" @bind="@CurrentValue">
+		@foreach (var option in Options)
+		{
+			<option value="@option.Key">@option.Value</option>
+		}
+	</select>
+	<div id="@Id-Help" class="form-text">@Tip</div>
+	<div class="form-control-validation">
+		<ValidationMessage For="@ValidationFor" />
+	</div>
+</div>
+
+@code {
+
+	[Parameter, EditorRequired] public Expression<Func<string>> ValidationFor { get; set; } = default!;
+	[Parameter] public IDictionary<string, string> Options { get; set; }
+	[Parameter] public string? Id { get; set; }
+	[Parameter] public string? Label { get; set; }
+	[Parameter] public string? Tip { get; set; }
+	[Parameter] public int? Size { get; set; }
+
+	protected override bool TryParseValueFromString(string? value, out string result, out string validationErrorMessage)
+	{
+		result = value;
+		validationErrorMessage = null;
+		StateHasChanged();
+		return true;
+	}
+}

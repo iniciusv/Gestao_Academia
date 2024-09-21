@@ -1,0 +1,76 @@
+﻿@page "/lista-alunos"
+@using Gestao_Academia.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Lista de Alunos</h3>
+
+@if (alunos == null)
+{
+    <p>Carregando...</p>
+}
+else if (!alunos.Any())
+{
+    <p>Nenhum aluno cadastrado.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Altura (m)</th>
+                <th>Peso (kg)</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var aluno in alunos)
+            {
+                <tr>
+                    <td>@aluno.</td>
+                    <td>@aluno.Idade</td>
+                    <td>@aluno.Altura</td>
+                    <td>@aluno.Peso</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" @onclick="() => EditarAluno(aluno.Id)">Editar</button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeletarAluno(aluno.Id)">Deletar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Students> alunos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        alunos = await Http.GetFromJsonAsync<List<Students>>("Alunos");
+    }
+
+    private void EditarAluno(int id)
+    {
+        NavigationManager.NavigateTo($"/editar-aluno/{id}");
+    }
+
+    private async Task DeletarAluno(int id)
+    {
+        bool confirm = await JSRuntime.InvokeAsync<bool>("confirm", "Deseja realmente deletar este aluno?");
+        if (confirm)
+        {
+            var response = await Http.DeleteAsync($"Alunos/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                alunos = await Http.GetFromJsonAsync<List<Students>>("Alunos");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Erro ao deletar aluno: {error}");
+            }
+        }
+    }
+}

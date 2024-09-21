@@ -1,0 +1,39 @@
+﻿@using System.Linq.Expressions
+@inherits InputBase<double>
+
+<div class="input-container col-@Size mt-3" title="@Tip">
+	<label for="txt-@Id" class="form-label">@Label</label>
+	<div class="input-group">
+		<input class="form-control @CssClass" id="txt-@Id" type="number" @bind="@Value" />
+		<div class="input-group-append">
+			<span class="input-group-text">%</span>
+		</div>
+	</div>
+	<div id="@Id-Help" class="form-text">@Tip</div>
+	<div class="form-control-validation">
+		<ValidationMessage For="@ValidationFor" />
+	</div>
+</div>
+
+@code {
+
+	[Parameter, EditorRequired] public Expression<Func<double>> ValidationFor { get; set; } = default!;
+	[Parameter] public string? Id { get; set; }
+	[Parameter] public string? Label { get; set; }
+	[Parameter] public string? PlaceHolder { get; set; }
+	[Parameter] public string? Tip { get; set; }
+	[Parameter] public int? Size { get; set; }
+	public double Value
+	{
+		get => CurrentValue * 100;
+		set => CurrentValue = value / 100;
+	}
+
+	protected override bool TryParseValueFromString(string value, out double result, out string validationErrorMessage)
+	{
+		result = double.Parse(value);
+		validationErrorMessage = null;
+		return true;
+	}
+
+}

@@ -1,0 +1,30 @@
+﻿@using System.Linq.Expressions;
+@inherits InputBase<bool>
+
+<div class="input-container col-@Size mt-3" title="@Tip">
+	<div class="form-check form-switch">
+		<input id="txt-@Id" class="form-check-input @CssClass" type="checkbox" role="switch" @bind="@CurrentValue">
+		<label for="txt-@Id" class="form-check-label">@Label</label>
+	</div>
+	<div id="@Id-Help" class="form-text">@Tip</div>
+	<div class="form-control-validation">
+		<ValidationMessage For="@ValidationFor" />
+	</div>
+</div>
+
+@code {
+
+	[Parameter, EditorRequired] public Expression<Func<bool>> ValidationFor { get; set; } = default!;
+	[Parameter] public string? Id { get; set; }
+	[Parameter] public string? Label { get; set; }
+	[Parameter] public string? Tip { get; set; }
+	[Parameter] public int? Size { get; set; }
+
+	protected override bool TryParseValueFromString(string value, out bool result, out string validationErrorMessage)
+	{
+		result = bool.Parse(value);
+		validationErrorMessage = null;
+		return true;
+	}
+
+}

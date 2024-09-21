@@ -1,0 +1,51 @@
+﻿@page "/editar-aluno/{Id:int}"
+@using Gestao_Academia.Models
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject IUriHelper UriHelper
+
+<h3>Editar Aluno</h3>
+
+@if (aluno == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <EditForm Model="@aluno" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <LabInputText Id="nome" Label="Nome" ValidationFor="@(() => aluno.Nome)" Size="6" />
+        <LabInputInt Id="idade" Label="Idade" ValidationFor="@(() => aluno.Idade)" Size="6" />
+        <LabInputDouble Id="altura" Label="Altura" Apend="m" ValidationFor="@(() => aluno.Altura)" Size="6" />
+        <LabInputDouble Id="peso" Label="Peso" Apend="kg" ValidationFor="@(() => aluno.Peso)" Size="6" />
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    private Students aluno;
+
+    protected override async Task OnInitializedAsync()
+    {
+        aluno = await Http.GetFromJsonAsync<Students>($"Alunos/{Id}");
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PutAsJsonAsync($"Alunos/{Id}", aluno);
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/lista-alunos");
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Erro ao atualizar aluno: {error}");
+        }
+    }
+}
