@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Authorization;  // Importante para usar [Authorize]
 
 [ApiController]
 [Route("[controller]")]
-public class AlunosController : ControllerBase
+public class StudentsController : ControllerBase
 {
 	private readonly AlunoService AlunoService;
 
-	public AlunosController(AlunoService alunoService)
+	public StudentsController(AlunoService alunoService)
 	{
 		AlunoService = alunoService;
 	}
 
 	[Authorize]
 	[HttpGet]
-	public async Task<IActionResult> GetAlunos()
+	public async Task<IActionResult> GetStudents()
 	{
 		var alunos = await AlunoService.ListarAsync();
 		return Ok(alunos);
@@ -24,7 +24,7 @@ public class AlunosController : ControllerBase
 
 	[Authorize]
 	[HttpGet("{id}")]
-	public IActionResult Detalhes(int id)
+	public IActionResult Detail(int id)
 	{
 		var aluno = AlunoService.ObterAsync(id);
 		return aluno != null ? Ok(aluno) : NotFound();
@@ -32,15 +32,15 @@ public class AlunosController : ControllerBase
 
 	[Authorize]
 	[HttpPost]
-	public IActionResult Criar([FromBody] Students aluno)
+	public IActionResult Create([FromBody] Students aluno)
 	{
 		AlunoService.CadastrarAsync(aluno);
-		return CreatedAtAction(nameof(Detalhes), new { id = aluno.Id }, aluno);
+		return CreatedAtAction(nameof(Detail), new { id = aluno.Id }, aluno);
 	}
 
 	[Authorize]
 	[HttpPut("{id}")]
-	public IActionResult Editar(int id, [FromBody] Students aluno)
+	public IActionResult Edit(int id, [FromBody] Students aluno)
 	{
 		if (id != aluno.Id)
 		{
@@ -65,8 +65,8 @@ public class AlunosController : ControllerBase
 	{
 		try
 		{
-			var alunos = await AlunoService.ListarAsync();
-			return Ok(alunos);
+			var students = await AlunoService.ListarAsync();
+			return Ok(students);
 		}
 		catch (Exception ex)
 		{
