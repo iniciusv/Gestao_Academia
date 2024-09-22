@@ -1,15 +1,13 @@
 ﻿using Gestao_Academia.Models;
 using Gestao_Academia.RepositoryAbstractions;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Gestao_Academia.Service;
 
-public class AlunoService
+public class StudentsService
 {
-	private readonly IAlunoRepository Repository;
+	private readonly IStudentsRepository Repository;
 
-	public AlunoService(IAlunoRepository repository)
+	public StudentsService(IStudentsRepository repository)
 	{
 		Repository = repository;
 	}
@@ -25,18 +23,19 @@ public class AlunoService
 		return await Repository.GetByIdAsync(id);
 	}
 
-	public async Task CadastrarAsync(Students aluno)
+	public async Task CreateAsync(Students aluno)
 	{
 		await Repository.AddAsync(aluno);
 	}
 
-	public async Task EditarAsync(Students aluno)
+	public async Task<bool> EditarAsync(Students aluno)
 	{
-		await Repository.UpdateAsync(aluno);
+		return await Repository.UpdateAsync(aluno);
 	}
 
-	public async Task DeletarAsync(int id)
+	public async Task<bool> DeleteAsync(int id)
 	{
-		await Repository.DeleteAsync(id);
+		return await Repository.DeleteAsync(id);
 	}
+
 }

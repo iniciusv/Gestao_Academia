@@ -2,11 +2,12 @@
 
 namespace Gestao_Academia.RepositoryAbstractions;
 
-public interface IAlunoRepository
+public interface IStudentsRepository
 {
 	Task<IEnumerable<Students>> GetAllAsync();
 	Task<Students> GetByIdAsync(int id);
 	Task AddAsync(Students aluno);
-	Task UpdateAsync(Students aluno);
-	Task DeleteAsync(int id);
+	Task<bool> UpdateAsync(Students aluno);
+	Task<bool> DeleteAsync(int id);
+
 }

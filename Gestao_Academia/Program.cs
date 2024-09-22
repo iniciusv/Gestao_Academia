@@ -2,9 +2,12 @@ using Gestao_Academia.Repository;
 using Gestao_Academia.RepositoryAbstractions;
 using Gestao_Academia.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
+using System.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,11 +66,13 @@ builder.Services.AddDbContext<AcademiaContext>(options =>
 	options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 21)))
 );
 
+builder.Services.AddScoped<IDbConnection>(db => new MySqlConnection(
+	builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IAlunoRepository, AlunoRepository>();
-builder.Services.AddScoped<AlunoService>();
+builder.Services.AddScoped<IStudentsRepository, StudentsRepository>();
+builder.Services.AddScoped<StudentsService>();
 
 var app = builder.Build();
 
