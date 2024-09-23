@@ -1,9 +1,6 @@
-namespace Gestao_Academia.Models
-{
-	public class ErrorViewModel
-	{
+namespace Gestao_Academia.Models{
+	public class ErrorViewModel{
 		public string? RequestId { get; set; }
-
 		public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 	}
 }

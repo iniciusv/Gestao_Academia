@@ -8,25 +8,22 @@ using Gestao_Academia.Repository;
 
 namespace Gestao_Academia.Service;
 
-public class AuthenticationService
-{
+public class AuthenticationService{
 	private readonly IConfiguration Configuration;
 	private readonly IUserRepository UserRepository;
 
-	public AuthenticationService(IConfiguration configuration, IUserRepository userRepository)
-	{
+	public AuthenticationService(IConfiguration configuration, IUserRepository userRepository){
 		Configuration = configuration;
 		UserRepository = userRepository;
 	}
 
-	public string GenerateJwtToken(string username)
-	{
+	public string GenerateJwtToken(string username){
 		var claims = new List<Claim>
 		{
 			new Claim(ClaimTypes.Name, username)
 		};
 
-		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]));
+		var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]!));
 		var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
 		var token = new JwtSecurityToken(
@@ -39,8 +36,7 @@ public class AuthenticationService
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
 
-	public bool ValidateUser(string username, string password)
-	{
+	public bool ValidateUser(string username, string password){
 		var user = UserRepository.FindByUsername(username);
 		if (user != null)
 		{
