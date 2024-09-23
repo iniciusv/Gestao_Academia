@@ -5,31 +5,39 @@ using System.Threading.Tasks;
 
 namespace Gestao_Academia.Service;
 
-public class CustomerService{
+public class CustomerService
+{
 	private readonly ICustomerRepository Repository;
 
-	public CustomerService(ICustomerRepository repository){
+	public CustomerService(ICustomerRepository repository)
+	{
 		Repository = repository;
 	}
 
-	public async Task<List<Customer>> ListCustomerAsync(){
-		var customers = await Repository.GetAllAsync();
-		return customers.ToList();
+	public async Task<List<Customer>> ListarAsync()
+	{
+		var alunos = await Repository.GetAllAsync();
+		return alunos.ToList();
 	}
 
-	public async Task<Customer> GetCustomerByIdAsync(int id){
+	public async Task<Customer> ObterAsync(int id)
+	{
 		return await Repository.GetByIdAsync(id);
 	}
 
-	public async Task AddCustomerAsync(Customer customer){
+	public async Task CreateAsync(Customer customer)
+	{
 		await Repository.AddAsync(customer);
 	}
 
-	public async Task EditCustomerAsync(Customer customer){
-		await Repository.UpdateAsync(customer);
+	public async Task<bool> EditarAsync(Customer customer)
+	{
+		return await Repository.UpdateAsync(customer);
 	}
 
-	public async Task DeleteCustomerByIdAsync(int id){
-		await Repository.DeleteAsync(id);
+	public async Task<bool> DeleteAsync(int id)
+	{
+		return await Repository.DeleteAsync(id);
 	}
+
 }

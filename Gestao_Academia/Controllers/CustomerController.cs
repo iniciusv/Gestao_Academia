@@ -5,61 +5,72 @@ using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("[controller]")]
-public class CustomersController : ControllerBase{
+public class CustomerController : ControllerBase
+{
 	private readonly CustomerService CustomerService;
 
-	public CustomersController(CustomerService customerService){
+	public CustomerController(CustomerService customerService)
+	{
 		CustomerService = customerService;
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpGet]
-	public async Task<IActionResult> GetCustomers(){
-		var customers = await CustomerService.ListCustomerAsync();
-		return Ok(customers);
+	public async Task<IActionResult> GetStudents()
+	{
+		var alunos = await CustomerService.ListarAsync();
+		return Ok(alunos);
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpGet("{id}")]
-	public IActionResult Details(int id){
-		var customer = CustomerService.GetCustomerByIdAsync(id);
-		return customer != null ? Ok(customer) : NotFound();
+	public async Task<IActionResult> Detail(int id)
+	{
+		var aluno = await CustomerService.ObterAsync(id);
+		return aluno != null ? Ok(aluno) : NotFound();
 	}
 
-	[Authorize]
+
+	//[Authorize]
 	[HttpPost]
-	public async Task<IActionResult> Create([FromBody] Customer customer){
-		await CustomerService.AddCustomerAsync(customer);
-		return CreatedAtAction(nameof(Details), new { id = customer.Id }, customer);
+	public async Task<IActionResult> Create([FromBody] Customer students)
+	{
+		await CustomerService.CreateAsync(students);
+		return CreatedAtAction(nameof(Detail), new { id = students.Id }, students);
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpPut("{id}")]
-	public async Task<IActionResult> Edit(int id, [FromBody] Customer customer){
-		if (id != customer.Id){
-			return BadRequest();
+	public async Task<IActionResult> Edit(int id, [FromBody] Customer students)
+	{
+		if (id != students.Id)
+		{
+			return BadRequest("O ID do aluno não corresponde ao ID fornecido.");
 		}
 
-		await CustomerService.EditCustomerAsync(customer);
-		return NoContent();
+		var result = await CustomerService.EditarAsync(students);
+		if (result)
+		{
+			return NoContent();
+		}
+		else
+		{
+			return NotFound("Aluno não encontrado.");
+		}
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpDelete("{id}")]
-	public async Task<IActionResult> Delete(int id){
-		await CustomerService.DeleteCustomerByIdAsync(id);
-		return NoContent();
-	}
-
-	[Authorize]
-	[HttpGet("TestDatabaseConnection")]
-	public async Task<IActionResult> TestDatabaseConnection(){
-		try{
-			var customers = await CustomerService.ListCustomerAsync();
-			return Ok(customers);
+	public async Task<IActionResult> Delete(int id)
+	{
+		var result = await CustomerService.DeleteAsync(id);
+		if (result)
+		{
+			return NoContent();
 		}
-		catch (Exception ex){
-			return BadRequest($"Erro ao acessar o banco de dados: {ex.Message}");
+		else
+		{
+			return NotFound("Aluno não encontrado.");
 		}
 	}
 }

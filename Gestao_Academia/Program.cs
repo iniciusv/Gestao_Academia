@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MySqlConnector;
+using System.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +58,8 @@ builder.Services.AddDbContext<GymContext>(options =>
 	options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), new MySqlServerVersion(new Version(8, 0, 21)))
 );
 
+builder.Services.AddScoped<IDbConnection>(db => new MySqlConnection(
+	builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
