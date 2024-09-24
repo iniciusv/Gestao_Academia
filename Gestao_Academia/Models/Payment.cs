@@ -1,4 +1,8 @@
-﻿namespace Gestao_Academia.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Gestao_Academia.Models;
+
+[Table("payment")]
 public class Payment{
 	public int Id { get; set; }
 	public int IdCustomer { get; set; }
