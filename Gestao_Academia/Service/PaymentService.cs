@@ -14,29 +14,30 @@ public class PaymentService
         Repository = repository;
     }
 
-    public async Task<List<Payment>> GetAllPaymentsAsync()
+    public async Task<List<Payment>> ListarAsync()
     {
-        var Payments = await Repository.GetAllAsync();
-        return Payments.ToList();
+        var payments = await Repository.GetAllAsync();
+        return payments.ToList();
     }
 
-    public async Task<Payment> GetPaymentByIdAsync(int id)
+    public async Task<Payment> ObterAsync(int id)
     {
         return await Repository.GetByIdAsync(id);
     }
 
-    public async Task AddPaymentAsync(Payment Payment)
+    public async Task CreateAsync(Payment payment)
     {
-        await Repository.AddAsync(Payment);
+        await Repository.AddAsync(payment);
     }
 
-    public async Task UpdatePaymentAsync(Payment Payment)
+    public async Task<bool> EditarAsync(Payment payment)
     {
-        await Repository.UpdateAsync(Payment);
+        return await Repository.UpdateAsync(payment);
     }
 
-    public async Task DeletePaymentByIdAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        await Repository.DeleteAsync(id);
+        return await Repository.DeleteAsync(id);
     }
+
 }

@@ -30,7 +30,6 @@ public class CustomerController : ControllerBase
 		return aluno != null ? Ok(aluno) : NotFound();
 	}
 
-
 	//[Authorize]
 	[HttpPost]
 	public async Task<IActionResult> Create([FromBody] Customer students)

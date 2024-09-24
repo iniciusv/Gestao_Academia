@@ -63,8 +63,12 @@ builder.Services.AddScoped<IDbConnection>(db => new MySqlConnection(
 
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<CustomerService>();
+
+builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+builder.Services.AddScoped<PaymentService>();
 
 var app = builder.Build();
 

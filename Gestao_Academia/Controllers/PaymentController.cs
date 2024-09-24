@@ -14,63 +14,62 @@ public class PaymentController : ControllerBase
         PaymentService = paymentService;
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet]
-    public async Task<IActionResult> GetPayments()
+    public async Task<IActionResult> GetStudents()
     {
-        var payments = await PaymentService.GetAllPaymentsAsync();
+        var payments = await PaymentService.ListarAsync();
         return Ok(payments);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpGet("{id}")]
-    public IActionResult Get(int id)
+    public async Task<IActionResult> Detail(int id)
     {
-        var payment = PaymentService.GetPaymentByIdAsync(id);
+        var payment = await PaymentService.ObterAsync(id);
         return payment != null ? Ok(payment) : NotFound();
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
-    public async Task<IActionResult> Add([FromBody] Payment payment)
+    public async Task<IActionResult> Create([FromBody] Payment payments)
     {
-        await PaymentService.AddPaymentAsync(payment);
-        return CreatedAtAction(nameof(Get), new { id = payment.Id }, payment);
+        await PaymentService.CreateAsync(payments);
+        return CreatedAtAction(nameof(Detail), new { id = payments.Id }, payments);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] Payment payment)
+    public async Task<IActionResult> Edit(int id, [FromBody] Payment payments)
     {
-        if (id != payment.Id)
+        if (id != payments.Id)
         {
-            return BadRequest();
+            return BadRequest("O ID do payment não corresponde ao ID fornecido.");
         }
 
-        await PaymentService.UpdatePaymentAsync(payment);
-        return NoContent();
+        var result = await PaymentService.EditarAsync(payments);
+        if (result)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return NotFound("Aluno não encontrado.");
+        }
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        await PaymentService.DeletePaymentByIdAsync(id);
-        return NoContent();
-    }
-
-    [Authorize]
-    [HttpGet("TestDatabaseConnection")]
-    public async Task<IActionResult> TestDatabaseConnection()
-    {
-        try
+        var result = await PaymentService.DeleteAsync(id);
+        if (result)
         {
-            var payments = await PaymentService.GetAllPaymentsAsync();
-            return Ok(payments);
+            return NoContent();
         }
-        catch (Exception ex)
+        else
         {
-            return BadRequest($"Erro ao acessar o banco de dados: {ex.Message}");
+            return NotFound("Aluno não encontrado.");
         }
     }
 }
