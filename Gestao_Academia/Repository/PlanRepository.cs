@@ -21,11 +21,13 @@ public class PlanRepository : IPlanRepository{
 	}	
 	
 	public async Task AddAsync(Plan plan){
+		plan.Created_at = DateTime.Now;
 		Context.Plan.Add(plan);
 		await Context.SaveChangesAsync();
 	}
 
 	public async Task UpdateAsync(Plan plan){
+		plan.Updated_at = DateTime.Now;
 		Context.Entry(plan).State = EntityState.Modified;
 		await Context.SaveChangesAsync();
 	}
@@ -38,4 +40,10 @@ public class PlanRepository : IPlanRepository{
 			await Context.SaveChangesAsync();
 		}
 	}
+
+	public async Task<IEnumerable<Plan>> GetByCustomerIdAsync(int customerId){
+        return await Context.Plan
+            .Where(p => p.IdCustomer == customerId)
+            .ToListAsync();
+    }
 }

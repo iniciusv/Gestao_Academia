@@ -9,7 +9,12 @@ public class Plan{
 	public string? Plan_Type { get; set; }
  	public DateTime? Start_Date { get; set; }
   	public DateTime? End_Date { get; set; }
-   	public Enum? Status { get;set }
+   	public PlanStatusEnum? Status { get;set; }
  	public DateTime? Created_at { get; set; }
   	public DateTime? Updated_at { get; set; }
+}
+
+public enum PlanStatusEnum{
+    Active,
+    Inactive
 }

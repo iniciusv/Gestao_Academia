@@ -28,20 +28,29 @@ public class PlanController : ControllerBase{
 
 	[Authorize]
 	[HttpPost]
-	public async Task<IActionResult> Add([FromBody] Plan plan){
-		await PlanService.AddPlanAsync(plan);
-		return CreatedAtAction(nameof(Get), new { id = plan.Id }, plan);
+	public async Task<IActionResult> Add(int customerId, [FromBody] string planType){
+		try{
+			await PlanService.AddPlanForNewCustomerAsync(customerId, planType);
+			return Ok($"Plano {planType} adicionado para o cliente {customerId}.");
+		}
+		catch (InvalidOperationException ex){
+			return BadRequest(ex.Message);
+		}
 	}
 
 	[Authorize]
-	[HttpPut("{id}")]
-	public async Task<IActionResult> Update(int id, [FromBody] Plan plan){
-		if (id != plan.Id){
-			return BadRequest();
+	[HttpPut("{customerId}")]
+	public async Task<IActionResult> Update(int customerId, [FromBody] string? newPlanType, bool cancelPlan = false){
+		try{
+			await PlanService.UpdatePlanAsync(customerId, newPlanType, cancelPlan);
+			return NoContent();
 		}
-
-		await PlanService.UpdatePlanAsync(plan);
-		return NoContent();
+		catch (InvalidOperationException ex){
+			return BadRequest(ex.Message);
+		}
+		catch (ArgumentException ex){
+			return BadRequest(ex.Message);
+		}
 	}
 
 	[Authorize]
