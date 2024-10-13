@@ -12,30 +12,33 @@ public class PlanController : ControllerBase{
 		PlanService = planService;
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpGet]
-	public async Task<IActionResult> GetPlans(){
+	public async Task<IActionResult> GetPlans()
+	{
 		var plans = await PlanService.GetAllPlansAsync();
 		return Ok(plans);
 	}
 
-	[Authorize]
+
+
+	//[Authorize]
 	[HttpGet("{id}")]
 	public IActionResult Get(int id){
 		var plan = PlanService.GetPlanByIdAsync(id);
 		return plan != null ? Ok(plan) : NotFound();
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpPost]
 	public async Task<IActionResult> Add([FromBody] Plan plan){
 		await PlanService.AddPlanAsync(plan);
 		return CreatedAtAction(nameof(Get), new { id = plan.Id }, plan);
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpPut("{id}")]
-	public async Task<IActionResult> Update(int id, [FromBody] Plan plan){
+	public async Task<IActionResult> Update(long id, [FromBody] Plan plan){
 		if (id != plan.Id){
 			return BadRequest();
 		}
@@ -44,14 +47,14 @@ public class PlanController : ControllerBase{
 		return NoContent();
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpDelete("{id}")]
 	public async Task<IActionResult> Delete(int id){
 		await PlanService.DeletePlanByIdAsync(id);
 		return NoContent();
 	}
 
-	[Authorize]
+	//[Authorize]
 	[HttpGet("TestDatabaseConnection")]
 	public async Task<IActionResult> TestDatabaseConnection(){
 		try

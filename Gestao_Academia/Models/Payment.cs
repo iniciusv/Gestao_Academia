@@ -8,7 +8,8 @@ public class Payment
 {
 	public int Id { get; set; }
 	public int member_id { get; set; }
-	[DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ssZ}", ApplyFormatInEditMode = true)]
+	//[DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ssZ}", ApplyFormatInEditMode = true)]
+	public DateTime? date { get; set; }
 	public string? Status { get; set; }
 	public string? payment_method { get; set; }
 	[DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm:ssZ}", ApplyFormatInEditMode = true)]
